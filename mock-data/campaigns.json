@@ -1,0 +1,23 @@
+[
+  {
+    "id": "camp_100",
+    "account_id": "act_mock_1001",
+    "name": "Spring Sale — Prospecting",
+    "status": "active",
+    "objective": "conversions"
+  },
+  {
+    "id": "camp_200",
+    "account_id": "act_mock_1001",
+    "name": "Retargeting — Cart Abandoners",
+    "status": "active",
+    "objective": "conversions"
+  },
+  {
+    "id": "camp_300",
+    "account_id": "act_mock_1001",
+    "name": "Brand Awareness — Video",
+    "status": "paused",
+    "objective": "awareness"
+  }
+]

@@ -1,0 +1,50 @@
+[
+  {
+    "id": "ad_a",
+    "campaign_id": "camp_100",
+    "name": "Hero Video — Trail Runner v1",
+    "status": "active",
+    "creative_type": "video",
+    "signal_profile": "creative_fatigue"
+  },
+  {
+    "id": "ad_b",
+    "campaign_id": "camp_100",
+    "name": "Static — Product Grid",
+    "status": "active",
+    "creative_type": "image",
+    "signal_profile": "stable_control"
+  },
+  {
+    "id": "ad_c",
+    "campaign_id": "camp_200",
+    "name": "Carousel — Best Sellers",
+    "status": "active",
+    "creative_type": "carousel",
+    "signal_profile": "spend_spike_flat_conversions"
+  },
+  {
+    "id": "ad_d",
+    "campaign_id": "camp_200",
+    "name": "UGC Test — New Hook",
+    "status": "active",
+    "creative_type": "video",
+    "signal_profile": "insufficient_baseline"
+  },
+  {
+    "id": "ad_e",
+    "campaign_id": "camp_300",
+    "name": "Brand Story — 15s Cut",
+    "status": "paused",
+    "creative_type": "video",
+    "signal_profile": "missing_days_gap"
+  },
+  {
+    "id": "ad_f",
+    "campaign_id": "camp_300",
+    "name": "Logo Animation",
+    "status": "paused",
+    "creative_type": "video",
+    "signal_profile": "stable_control"
+  }
+]

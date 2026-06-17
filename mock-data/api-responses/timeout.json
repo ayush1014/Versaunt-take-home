@@ -1,0 +1,7 @@
+{
+  "error": {
+    "code": "GATEWAY_TIMEOUT",
+    "message": "Upstream platform did not respond within 30 seconds.",
+    "retryable": true
+  }
+}
