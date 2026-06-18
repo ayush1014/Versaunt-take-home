@@ -24,14 +24,14 @@ export function TaskActions({
   }
 
   const btn =
-    "inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-medium transition disabled:opacity-50";
+    "glass-control inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium disabled:opacity-50";
 
   if (status !== "open") {
     return (
       <button
         onClick={() => set("open")}
         disabled={pending}
-        className={`${btn} text-muted-foreground hover:bg-foreground/5 hover:text-foreground`}
+        className={`${btn} text-foreground`}
       >
         <RotateCcw className="h-3.5 w-3.5" /> Reopen
       </button>
@@ -43,14 +43,14 @@ export function TaskActions({
       <button
         onClick={() => set("resolved")}
         disabled={pending}
-        className={`${btn} text-emerald-700 hover:bg-emerald-50 dark:text-emerald-400 dark:hover:bg-emerald-500/10`}
+        className={`${btn} text-emerald-600 dark:text-emerald-400`}
       >
         <Check className="h-3.5 w-3.5" /> Resolve
       </button>
       <button
         onClick={() => set("dismissed")}
         disabled={pending}
-        className={`${btn} text-muted-foreground hover:bg-foreground/5 hover:text-foreground`}
+        className={`${btn} text-muted-foreground`}
       >
         <X className="h-3.5 w-3.5" /> Dismiss
       </button>

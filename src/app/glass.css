@@ -24,7 +24,9 @@ input:autofill { background-color: transparent !important; background-clip: cont
      elements that also use .glass-panel (e.g. the mobile drawer). */
   backdrop-filter: blur(22px);
   -webkit-backdrop-filter: blur(22px);
-  background: linear-gradient(-75deg, oklch(from var(--background) l c h / 55%), oklch(from var(--background) l c h / 72%), oklch(from var(--background) l c h / 55%));
+  /* Match the card surface (--card) so the sidebar/drawer is the same colour
+     as the cards in both light and dark mode. */
+  background: oklch(from var(--card) l c h / 78%);
   border: 1px solid oklch(from var(--foreground) l c h / 8%);
   box-shadow:
     0 18px 40px -16px oklch(from var(--foreground) l c h / 22%),
