@@ -42,14 +42,14 @@ export function SyncPanel({ showSimulator = true }: { showSimulator?: boolean })
   }
 
   return (
-    <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+    <div className="flex flex-wrap items-center gap-2">
       {showSimulator ? (
         <select
           value={fail}
           onChange={(e) => setFail(e.target.value)}
           disabled={pending}
           aria-label="Failure mode simulator"
-          className="h-10 rounded-xl border border-border bg-background/60 px-3 text-sm text-foreground backdrop-blur outline-none transition focus:border-foreground/40 disabled:opacity-60"
+          className="h-9 w-40 shrink-0 rounded-xl border border-border bg-background/60 px-3 text-sm text-foreground backdrop-blur outline-none transition focus:border-foreground/40 disabled:opacity-60"
         >
           {FAIL_OPTIONS.map((o) => (
             <option key={o.value} value={o.value}>
@@ -63,6 +63,7 @@ export function SyncPanel({ showSimulator = true }: { showSimulator?: boolean })
         size="sm"
         onClick={runSyncNow}
         disabled={pending}
+        className="shrink-0"
         contentClassName="flex items-center gap-2 text-foreground"
       >
         <RefreshCw className={`h-4 w-4 ${pending ? "animate-spin" : ""}`} />

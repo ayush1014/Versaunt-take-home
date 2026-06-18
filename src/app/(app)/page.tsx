@@ -176,9 +176,11 @@ export default async function DashboardPage() {
         <div className="mt-5 flex flex-wrap items-center gap-4">
           <SyncPanel />
           {latestRun ? (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <span>Last sync:</span>
-              <SyncStatusBadge status={latestRun.status as SyncStatus} />
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted-foreground">
+              <span className="flex items-center gap-2 whitespace-nowrap">
+                Last sync:
+                <SyncStatusBadge status={latestRun.status as SyncStatus} />
+              </span>
               <span className="font-mono text-xs">
                 {fmtRelative(latestRun.completed_at ?? latestRun.started_at)} ·{" "}
                 {latestRun.pages_fetched}/{latestRun.total_pages ?? "?"} pages ·{" "}
