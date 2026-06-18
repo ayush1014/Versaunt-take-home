@@ -17,7 +17,7 @@ export type MetricRowView = {
 // Per-ad current metrics. Glass card frame, readable table body.
 export function MetricsTable({ rows }: { rows: MetricRowView[] }) {
   return (
-    <section id="metrics" className="glass-card rounded-2xl">
+    <section id="metrics" className="glass-card min-w-0 rounded-2xl">
       <div className="flex items-center justify-between border-b border-border/60 px-5 py-4">
         <div>
           <h2 className="text-sm font-semibold text-foreground">Metrics summary</h2>

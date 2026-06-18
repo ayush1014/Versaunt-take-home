@@ -28,7 +28,7 @@ export function EventsTimeline({
   viewAllHref?: string;
 }) {
   return (
-    <section id="activity" className="glass-card flex flex-col rounded-2xl">
+    <section id="activity" className="glass-card flex min-w-0 flex-col rounded-2xl">
       <div className="border-b border-border/60 px-5 py-4">
         <h2 className="text-sm font-semibold text-foreground">Activity</h2>
         <p className="text-xs text-muted-foreground">

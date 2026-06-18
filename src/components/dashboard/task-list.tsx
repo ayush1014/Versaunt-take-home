@@ -80,12 +80,13 @@ export function TaskList({ tasks }: { tasks: TaskView[] }) {
           {tasks.map((t) => (
             <li
               key={t.id}
-              className={`flex gap-3 px-5 py-4 ${t.status !== "open" ? "opacity-60" : ""}`}
+              className={`flex flex-col gap-3 px-5 py-4 sm:flex-row ${t.status !== "open" ? "opacity-60" : ""}`}
             >
-              <div
-                className={`mt-1 h-full w-1 shrink-0 rounded-full ${SEVERITY_BAR[t.severity]}`}
-              />
-              <div className="min-w-0 flex-1">
+              <div className="flex min-w-0 flex-1 gap-3">
+                <div
+                  className={`mt-1 h-full min-h-8 w-1 shrink-0 rounded-full ${SEVERITY_BAR[t.severity]}`}
+                />
+                <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="text-sm font-semibold text-foreground">
                     {t.title}
@@ -115,8 +116,9 @@ export function TaskList({ tasks }: { tasks: TaskView[] }) {
                     · detected {fmtRelative(t.last_detected_at)}
                   </span>
                 </div>
+                </div>
               </div>
-              <div className="shrink-0 self-center">
+              <div className="shrink-0 pl-4 sm:self-center sm:pl-0">
                 <TaskActions taskId={t.id} status={t.status} />
               </div>
             </li>
