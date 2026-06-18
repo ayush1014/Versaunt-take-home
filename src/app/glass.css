@@ -20,7 +20,8 @@ input:autofill { background-color: transparent !important; background-clip: cont
 
 /* ---- Floating glass panel (sidebar) & cards ---- */
 .glass-panel {
-  position: relative;
+  /* No `position` here — it would override Tailwind's fixed/absolute on
+     elements that also use .glass-panel (e.g. the mobile drawer). */
   backdrop-filter: blur(22px);
   -webkit-backdrop-filter: blur(22px);
   background: linear-gradient(-75deg, oklch(from var(--background) l c h / 55%), oklch(from var(--background) l c h / 72%), oklch(from var(--background) l c h / 55%));
