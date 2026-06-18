@@ -11,7 +11,6 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { MultiSelect } from "@/components/ui/multi-select";
 import {
@@ -213,9 +212,9 @@ export function MetricsExplorer({ rows }: { rows: MetricRow[] }) {
     );
 
   return (
-    <section className="glass-card overflow-hidden rounded-2xl">
+    <section className="glass-card flex h-full flex-col overflow-hidden rounded-2xl">
       {/* Header + search */}
-      <div className="space-y-4 border-b border-border/60 p-5">
+      <div className="shrink-0 space-y-4 border-b border-border/60 p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h1 className="text-base font-semibold text-foreground">Metrics</h1>
@@ -223,13 +222,13 @@ export function MetricsExplorer({ rows }: { rows: MetricRow[] }) {
               {filtered.length} of {rows.length} rows · ad × day
             </p>
           </div>
-          <div className="relative w-full max-w-xs">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              placeholder="Search ad or campaign…"
+          <div className="glass-control flex h-9 w-full max-w-xs items-center gap-2 rounded-full px-3">
+            <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
+            <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-9"
+              placeholder="Search ad or campaign…"
+              className="h-full w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
             />
           </div>
         </div>
@@ -273,10 +272,10 @@ export function MetricsExplorer({ rows }: { rows: MetricRow[] }) {
         </div>
       </div>
 
-      {/* Table */}
-      <div className="overflow-x-auto">
+      {/* Table — only the rows scroll; column header stays fixed (sticky) */}
+      <div className="min-h-0 flex-1 overflow-auto">
         <table className="w-full min-w-[860px] text-sm">
-          <thead>
+          <thead className="sticky top-0 z-10 bg-card/95 backdrop-blur">
             <tr className="border-b border-border/60 text-xs text-muted-foreground">
               <SortHeader label="Date" k="date" sort={sort} onSort={setSortKey} />
               <SortHeader label="Ad" k="adName" sort={sort} onSort={setSortKey} />
@@ -332,8 +331,8 @@ export function MetricsExplorer({ rows }: { rows: MetricRow[] }) {
         </table>
       </div>
 
-      {/* Pagination */}
-      <div className="flex items-center justify-between gap-3 border-t border-border/60 px-5 py-3 text-xs text-muted-foreground">
+      {/* Pagination — fixed footer */}
+      <div className="flex shrink-0 items-center justify-between gap-3 border-t border-border/60 px-5 py-3 text-xs text-muted-foreground">
         <span>
           {filtered.length === 0
             ? "0 rows"
