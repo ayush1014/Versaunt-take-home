@@ -68,7 +68,7 @@ export function TopBar({
         <form action={signOut} className="lg:hidden">
           <button
             aria-label="Sign out"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-background/60 text-foreground backdrop-blur transition hover:bg-accent"
+            className="glass-control inline-flex h-9 w-9 items-center justify-center rounded-full text-foreground"
           >
             <LogOut className="h-4 w-4" />
           </button>
