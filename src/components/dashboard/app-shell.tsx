@@ -65,10 +65,10 @@ export function AppShell({
   return (
     <div className="relative h-dvh overflow-hidden bg-zinc-50 dark:bg-zinc-950">
       <div className="relative z-10 flex h-dvh">
-        {/* Desktop sidebar — collapsible */}
+        {/* Desktop sidebar — collapsible (shown ≥ lg; phones/tablets use the drawer) */}
         <aside
           className={cn(
-            "my-3 hidden shrink-0 flex-col rounded-3xl glass-panel transition-all duration-300 md:flex",
+            "my-3 hidden shrink-0 flex-col rounded-3xl glass-panel transition-all duration-300 lg:flex",
             collapsed ? "ml-0 w-0 overflow-hidden p-0 opacity-0" : "ml-3 w-60 p-4",
           )}
         >
@@ -81,15 +81,15 @@ export function AppShell({
           aria-hidden
           onClick={() => setMobileOpen(false)}
           className={cn(
-            "fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-opacity duration-300 md:hidden",
+            "fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-opacity duration-300 lg:hidden",
             mobileOpen ? "opacity-100" : "pointer-events-none opacity-0",
           )}
         />
         {/* Mobile drawer */}
         <aside
           className={cn(
-            "fixed inset-y-3 left-3 z-50 flex w-64 flex-col rounded-3xl glass-panel p-4 shadow-2xl transition-transform duration-300 md:hidden",
-            mobileOpen ? "translate-x-0" : "-translate-x-[130%]",
+            "fixed inset-y-3 left-3 z-50 flex w-64 flex-col rounded-3xl glass-panel p-4 shadow-2xl transition-transform duration-300 lg:hidden",
+            mobileOpen ? "translate-x-0" : "translate-x-[-130%]",
           )}
         >
           <div className="flex items-center justify-between">
@@ -107,7 +107,7 @@ export function AppShell({
 
         {/* Right content panel — full height; only this scrolls */}
         <div className="relative min-w-0 flex-1">
-          <main className="h-full overflow-y-auto px-4 pb-4 pt-[4.25rem] md:pl-3 md:pr-4">
+          <main className="h-full overflow-y-auto px-4 pb-4 pt-[4.25rem] lg:pl-3 lg:pr-4">
             {children}
           </main>
 

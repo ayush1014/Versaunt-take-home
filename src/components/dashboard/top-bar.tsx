@@ -25,18 +25,18 @@ export function TopBar({
         <button
           onClick={onToggleMobile}
           aria-label="Open menu"
-          className="glass-control inline-flex h-9 w-9 items-center justify-center rounded-full text-foreground md:hidden"
+          className="glass-control inline-flex h-9 w-9 items-center justify-center rounded-full text-foreground lg:hidden"
         >
           <PanelLeft className="h-4 w-4" />
         </button>
         <button
           onClick={onToggleDesktop}
           aria-label="Toggle sidebar"
-          className="glass-control hidden h-9 w-9 items-center justify-center rounded-full text-foreground md:inline-flex"
+          className="glass-control hidden h-9 w-9 items-center justify-center rounded-full text-foreground lg:inline-flex"
         >
           <PanelLeft className="h-4 w-4" />
         </button>
-        <div className="flex items-center gap-2 md:hidden">
+        <div className="flex items-center gap-2 lg:hidden">
           <div className="rounded-md bg-primary p-1.5 text-primary-foreground">
             <Activity className="h-4 w-4" />
           </div>
@@ -49,7 +49,7 @@ export function TopBar({
       {/* Center: Overview-only glass search */}
       <div className="flex flex-1 justify-center">
         {showSearch ? (
-          <div className="glass-control pointer-events-auto hidden h-9 w-full max-w-2xl items-center gap-2 rounded-full px-3 md:flex">
+          <div className="glass-control pointer-events-auto hidden h-9 w-full max-w-2xl items-center gap-2 rounded-full px-3 lg:flex">
             <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
             <input
               type="text"
@@ -63,7 +63,7 @@ export function TopBar({
       {/* Right: theme + mobile sign out */}
       <div className="pointer-events-auto flex shrink-0 items-center gap-2">
         <ThemeToggle />
-        <form action={signOut} className="md:hidden">
+        <form action={signOut} className="lg:hidden">
           <button
             aria-label="Sign out"
             className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-background/60 text-foreground backdrop-blur transition hover:bg-accent"
