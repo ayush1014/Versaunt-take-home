@@ -18,8 +18,15 @@ const NAV = [
 ];
 
 // Sidebar nav. Routes to dedicated pages; the ACTIVE tab (by URL) is a glass
-// button, the rest are plain links.
-export function SidebarNav({ className }: { className?: string }) {
+// button, the rest are plain links. onNavigate fires after a click (used to
+// close the mobile drawer).
+export function SidebarNav({
+  className,
+  onNavigate,
+}: {
+  className?: string;
+  onNavigate?: () => void;
+}) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -34,7 +41,10 @@ export function SidebarNav({ className }: { className?: string }) {
             <GlassButton
               key={item.href}
               size="sm"
-              onClick={() => router.push(item.href)}
+              onClick={() => {
+                router.push(item.href);
+                onNavigate?.();
+              }}
               className="w-full [&>button]:w-full"
               contentClassName="flex w-full items-center gap-3 !justify-start !px-4 text-foreground"
             >
@@ -48,6 +58,7 @@ export function SidebarNav({ className }: { className?: string }) {
           <Link
             key={item.href}
             href={item.href}
+            onClick={onNavigate}
             className="flex items-center gap-3 rounded-xl px-4 py-2 text-sm font-medium text-muted-foreground transition hover:bg-foreground/5 hover:text-foreground"
           >
             <Icon className="h-4 w-4 shrink-0" />

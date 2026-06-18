@@ -1,43 +1,67 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { Activity, Search, LogOut } from "lucide-react";
+import { Activity, Search, LogOut, PanelLeft } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { signOut } from "@/lib/auth/actions";
 
-// Floating top controls. The search only appears on the Overview page; every
-// other page has its own in-page search. Theme toggle is always present.
-export function TopBar() {
+// Floating top controls. Left: sidebar toggle (opens the drawer on mobile,
+// collapses the sidebar on desktop) + mobile brand. Center: Overview-only
+// search. Right: theme toggle (+ mobile sign out).
+export function TopBar({
+  onToggleMobile,
+  onToggleDesktop,
+}: {
+  onToggleMobile: () => void;
+  onToggleDesktop: () => void;
+}) {
   const pathname = usePathname();
   const showSearch = pathname === "/";
 
   return (
-    <div className="pointer-events-none absolute inset-x-0 top-0 z-20 flex items-center px-3 pt-3">
-      {/* Mobile brand (sidebar hidden on mobile) */}
-      <div className="pointer-events-auto flex items-center gap-2 md:hidden">
-        <div className="rounded-md bg-primary p-1.5 text-primary-foreground">
-          <Activity className="h-4 w-4" />
+    <div className="pointer-events-none absolute inset-x-0 top-0 z-20 flex items-center gap-3 px-3 pt-3">
+      {/* Left: toggle + mobile brand */}
+      <div className="pointer-events-auto flex shrink-0 items-center gap-2">
+        <button
+          onClick={onToggleMobile}
+          aria-label="Open menu"
+          className="glass-control inline-flex h-9 w-9 items-center justify-center rounded-full text-foreground md:hidden"
+        >
+          <PanelLeft className="h-4 w-4" />
+        </button>
+        <button
+          onClick={onToggleDesktop}
+          aria-label="Toggle sidebar"
+          className="glass-control hidden h-9 w-9 items-center justify-center rounded-full text-foreground md:inline-flex"
+        >
+          <PanelLeft className="h-4 w-4" />
+        </button>
+        <div className="flex items-center gap-2 md:hidden">
+          <div className="rounded-md bg-primary p-1.5 text-primary-foreground">
+            <Activity className="h-4 w-4" />
+          </div>
+          <span className="text-sm font-semibold tracking-tight text-foreground">
+            Ad Monitor
+          </span>
         </div>
-        <span className="text-sm font-semibold tracking-tight text-foreground">
-          Ad Monitor
-        </span>
       </div>
 
-      {/* Overview-only glass search, centered (desktop) */}
-      {showSearch ? (
-        <div className="glass-control pointer-events-auto mx-auto hidden h-9 w-full max-w-2xl items-center gap-2 rounded-full px-3 md:flex">
-          <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
-          <input
-            type="text"
-            placeholder="Search ads, tasks…"
-            className="h-full w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
-          />
-        </div>
-      ) : null}
+      {/* Center: Overview-only glass search */}
+      <div className="flex flex-1 justify-center">
+        {showSearch ? (
+          <div className="glass-control pointer-events-auto hidden h-9 w-full max-w-2xl items-center gap-2 rounded-full px-3 md:flex">
+            <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
+            <input
+              type="text"
+              placeholder="Search ads, tasks…"
+              className="h-full w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
+            />
+          </div>
+        ) : null}
+      </div>
 
-      {/* Theme toggle (+ mobile sign out) — always pinned to the top-right
-          corner so it never depends on the (optional) search in the flow. */}
-      <div className="pointer-events-auto absolute right-3 top-3 flex items-center gap-2">
+      {/* Right: theme + mobile sign out */}
+      <div className="pointer-events-auto flex shrink-0 items-center gap-2">
         <ThemeToggle />
         <form action={signOut} className="md:hidden">
           <button
