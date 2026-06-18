@@ -49,7 +49,7 @@ export function SyncPanel({ showSimulator = true }: { showSimulator?: boolean })
           onChange={(e) => setFail(e.target.value)}
           disabled={pending}
           aria-label="Failure mode simulator"
-          className="h-9 w-40 shrink-0 rounded-xl border border-border bg-background/60 px-3 text-sm text-foreground backdrop-blur outline-none transition focus:border-foreground/40 disabled:opacity-60"
+          className="h-10 w-44 shrink-0 rounded-xl border border-border bg-background/60 px-3 text-base text-foreground backdrop-blur outline-none transition focus:border-foreground/40 disabled:opacity-60"
         >
           {FAIL_OPTIONS.map((o) => (
             <option key={o.value} value={o.value}>
