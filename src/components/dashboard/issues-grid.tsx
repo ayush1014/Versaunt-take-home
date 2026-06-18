@@ -9,7 +9,6 @@ import {
   X,
   Flame,
   TrendingUp,
-  AlertTriangle,
   CheckCircle2,
   RotateCcw,
   Clock,
@@ -159,7 +158,7 @@ export function IssuesGrid({ issues }: { issues: IssueView[] }) {
   const openCount = issues.filter((i) => i.status === "open").length;
 
   return (
-    <div className="space-y-4">
+    <div className="flex min-h-full flex-col gap-4">
       {/* Header + glass search */}
       <div className="space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
@@ -222,9 +221,9 @@ export function IssuesGrid({ issues }: { issues: IssueView[] }) {
         </motion.div>
       )}
 
-      {/* Pagination */}
+      {/* Pagination — pinned to the bottom of the content area */}
       {filtered.length > 0 ? (
-        <div className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
+        <div className="mt-auto flex items-center justify-between gap-3 border-t border-border/50 pt-3 text-xs text-muted-foreground">
           <span>
             Showing {start + 1}–{Math.min(start + PAGE_SIZE, filtered.length)} of{" "}
             {filtered.length}
