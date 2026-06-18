@@ -16,7 +16,9 @@ export function TopBar({
   onToggleDesktop: () => void;
 }) {
   const pathname = usePathname();
-  const showSearch = pathname === "/";
+  // Search is temporarily hidden everywhere. Flip back to `pathname === "/"`
+  // to show it on the Overview page again.
+  const showSearch = false && pathname === "/";
 
   return (
     <div className="pointer-events-none absolute inset-x-0 top-0 z-20 flex items-center gap-3 px-3 pt-3">
