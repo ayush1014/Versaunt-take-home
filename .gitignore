@@ -9,6 +9,8 @@ node_modules/
 out/
 dist/
 build/
+package-lock.json
+yarn.lock
 
 # OS
 .DS_Store
@@ -32,3 +34,9 @@ npm-debug.log*
 
 # Internal reviewer materials (do not commit to public template)
 internal/
+*.tsbuildinfo
+
+# Agents
+.claude
+AGENTS.md
+CLAUDE.md
