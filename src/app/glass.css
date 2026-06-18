@@ -179,4 +179,10 @@ input:autofill { background-color: transparent !important; background-clip: cont
    animation so the UI stays responsive. */
 @media (hover: none) and (pointer: coarse) {
   .blob-group-1, .blob-group-2 { animation: none; will-change: auto; }
+  /* Smaller backdrop-filter radius = far cheaper on mobile GPUs while keeping
+     the frosted look. */
+  .glass-card { backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+  .glass-panel { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+  .glass-pop { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+  .glass-control { backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
 }
