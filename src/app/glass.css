@@ -174,3 +174,9 @@ input:autofill { background-color: transparent !important; background-clip: cont
 @media (prefers-reduced-motion: reduce) {
   .blob-group-1, .blob-group-2 { animation: none; }
 }
+/* Touch devices (phones/tablets): animating big blurred SVG blobs behind
+   backdrop-filter glass pegs the mobile GPU. Keep the gradient, drop the
+   animation so the UI stays responsive. */
+@media (hover: none) and (pointer: coarse) {
+  .blob-group-1, .blob-group-2 { animation: none; will-change: auto; }
+}
