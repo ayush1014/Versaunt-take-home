@@ -40,12 +40,6 @@ function evidenceChips(rule: TaskRuleType, ev: Record<string, unknown>): string[
   return [];
 }
 
-const SEVERITY_BAR: Record<TaskSeverity, string> = {
-  critical: "bg-red-500",
-  warning: "bg-amber-500",
-  info: "bg-blue-500",
-};
-
 export function TaskList({ tasks }: { tasks: TaskView[] }) {
   const openCount = tasks.filter((t) => t.status === "open").length;
 
@@ -82,10 +76,7 @@ export function TaskList({ tasks }: { tasks: TaskView[] }) {
               key={t.id}
               className={`flex flex-col gap-3 px-5 py-4 sm:flex-row ${t.status !== "open" ? "opacity-60" : ""}`}
             >
-              <div className="flex min-w-0 flex-1 gap-3">
-                <div
-                  className={`mt-1 h-full min-h-8 w-1 shrink-0 rounded-full ${SEVERITY_BAR[t.severity]}`}
-                />
+              <div className="min-w-0 flex-1">
                 <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="text-sm font-semibold text-foreground">
