@@ -6,9 +6,13 @@ import type { MetricRow, SyncStatus } from "@/lib/types";
 
 type SupabaseAdmin = ReturnType<typeof createAdminClient>;
 
+// "skipped" is not a persisted sync_runs status. It means a concurrent sync
+// already holds this connection's lock, so the attempt made no changes at all.
+export type SyncResultStatus = SyncStatus | "skipped";
+
 export type SyncResult = {
-  syncRunId: string;
-  status: SyncStatus;
+  syncRunId: string | null;
+  status: SyncResultStatus;
   pagesFetched: number;
   totalPages: number | null;
   rowsUpserted: number;
@@ -82,7 +86,12 @@ export async function runSync(args: RunSyncArgs): Promise<SyncResult> {
   const admin = createAdminClient();
 
   // Reap stale runs: if a previous run crashed and was left "running", mark
-  // any older than 2 minutes as failed so the UI never shows it stuck forever.
+  // any older than 2 minutes as failed so the UI never shows it stuck forever,
+  // and so a crashed sync can't hold the per-connection lock indefinitely.
+  // The cutoff uses the app-server clock against the DB-set started_at; the
+  // 2-min threshold sits well above the 60s function budget, so it only ever
+  // reaps genuinely dead runs as long as the two clocks are within ~minutes
+  // (true on NTP-synced infra).
   await admin
     .from("sync_runs")
     .update({
@@ -95,7 +104,12 @@ export async function runSync(args: RunSyncArgs): Promise<SyncResult> {
     .eq("status", "running")
     .lt("started_at", new Date(Date.now() - 2 * 60 * 1000).toISOString());
 
-  // 1) Open a sync run.
+  // 1) Open a sync run. This row is also the per-connection lock: a partial
+  //    unique index on sync_runs (connection_id) WHERE status = 'running'
+  //    allows only one in-flight run per connection. If another sync for this
+  //    connection is already running, this insert fails with a unique violation
+  //    (23505) and we back off below instead of double-syncing. The lock is
+  //    per-connection, so other accounts keep syncing in parallel.
   const { data: run, error: runErr } = await admin
     .from("sync_runs")
     .insert({
@@ -106,9 +120,24 @@ export async function runSync(args: RunSyncArgs): Promise<SyncResult> {
     })
     .select("id")
     .single();
-  if (runErr || !run) {
-    throw new Error(`Could not start sync run: ${runErr?.message}`);
+  if (runErr) {
+    // 23505 = unique_violation: a concurrent sync already holds the lock. Skip
+    // cleanly — no run row, no events, no detection — so two syncs at once can
+    // never double count or leave duplicate run/event rows.
+    if (runErr.code === "23505") {
+      return {
+        syncRunId: null,
+        status: "skipped",
+        pagesFetched: 0,
+        totalPages: null,
+        rowsUpserted: 0,
+        tasksCreated: 0,
+        errorMessage: "A sync is already in progress for this account.",
+      };
+    }
+    throw new Error(`Could not start sync run: ${runErr.message}`);
   }
+  if (!run) throw new Error("Could not start sync run.");
   const syncRunId = run.id as string;
 
   await logEvent(admin, {
@@ -179,11 +208,15 @@ export async function runSync(args: RunSyncArgs): Promise<SyncResult> {
     }
   }
 
-  // 4) Run detection on whatever fresh data we have (completed or partial).
-  // A detection failure must never strand the run as "running" — catch it,
-  // record it, and still finalize the run below.
+  // 4) Run detection — only on a complete dataset we can stand behind. The mock
+  //    platform paginates by date, so a partial sync is missing the most recent
+  //    days; running detection on it would anchor the trend windows on stale
+  //    data and raise (or miss) alerts as if nothing were missing. On a partial
+  //    sync we defer detection to the next complete run and record why.
+  //    A detection failure must never strand the run as "running" — catch it,
+  //    record it, and still finalize the run below.
   let tasksCreated = 0;
-  if (status === "completed" || status === "partial") {
+  if (status === "completed") {
     try {
       const detection = await runDetectors({
         admin,
@@ -203,6 +236,15 @@ export async function runSync(args: RunSyncArgs): Promise<SyncResult> {
       });
       if (!errorMessage) errorMessage = message;
     }
+  } else if (status === "partial") {
+    await logEvent(admin, {
+      userId,
+      connectionId,
+      syncRunId,
+      type: "detection_deferred",
+      message: `Detection deferred: only ${pagesFetched}/${totalPages} pages synced. It will run on the next complete sync.`,
+      data: { pagesFetched, totalPages },
+    });
   }
 
   // 5) Close out the run honestly.

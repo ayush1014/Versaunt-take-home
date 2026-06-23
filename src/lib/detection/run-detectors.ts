@@ -1,6 +1,7 @@
 import "server-only";
 import type { createAdminClient } from "@/lib/supabase/admin";
 import { RULES } from "./rules";
+import { stableStringify } from "./stable-stringify";
 import {
   aggregate,
   computeWindows,
@@ -160,12 +161,23 @@ async function upsertTask({
 }): Promise<boolean> {
   const { data: existing } = await admin
     .from("tasks")
-    .select("id")
+    .select("id, severity, evidence")
     .eq("connection_id", connectionId)
     .eq("ad_id", adId)
     .eq("rule_type", detection.ruleType)
     .eq("period", period)
     .maybeSingle();
+
+  // Has this exact finding (same severity + evidence) already been raised? If
+  // so the re-detection changed nothing the operator cares about. We still bump
+  // last_detected_at below — we did re-confirm the condition is live — but we
+  // must NOT log a "refreshed" audit event for a change that didn't happen
+  // (e.g. re-running the same sync on unchanged data). Severity + evidence
+  // fully describe the finding; title/description derive from the same numbers.
+  const unchanged =
+    !!existing &&
+    existing.severity === detection.severity &&
+    stableStringify(existing.evidence) === stableStringify(detection.evidence);
 
   const nowIso = new Date().toISOString();
 
@@ -198,23 +210,28 @@ async function upsertTask({
     throw new Error(`Could not upsert task: ${error?.message}`);
   }
 
-  // Audit: distinguish a brand-new task from a refreshed one (best-effort).
-  await admin.from("events").insert({
-    user_id: userId,
-    connection_id: connectionId,
-    sync_run_id: syncRunId,
-    task_id: row.id,
-    type: existing ? "task_updated" : "task_created",
-    message: existing
-      ? `Re-detected ${detection.ruleType} for ${adId}; evidence refreshed.`
-      : detection.title,
-    data: {
-      ad_id: adId,
-      rule_type: detection.ruleType,
-      period,
-      severity: detection.severity,
-      evidence: detection.evidence,
-    },
-  });
+  // Audit the change, not the glance: only record an event when the finding is
+  // brand new or its evidence/severity actually changed. A re-detection that
+  // found nothing different bumps last_detected_at (above) but writes no event,
+  // so re-running an unchanged sync adds no "refreshed" noise to the audit log.
+  if (!unchanged) {
+    await admin.from("events").insert({
+      user_id: userId,
+      connection_id: connectionId,
+      sync_run_id: syncRunId,
+      task_id: row.id,
+      type: existing ? "task_updated" : "task_created",
+      message: existing
+        ? `Re-detected ${detection.ruleType} for ${adId}; evidence updated.`
+        : detection.title,
+      data: {
+        ad_id: adId,
+        rule_type: detection.ruleType,
+        period,
+        severity: detection.severity,
+        evidence: detection.evidence,
+      },
+    });
+  }
   return !existing;
 }

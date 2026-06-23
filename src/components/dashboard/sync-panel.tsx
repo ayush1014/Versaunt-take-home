@@ -75,8 +75,10 @@ export function SyncPanel({ showSimulator = true }: { showSimulator?: boolean })
           {result.status === "completed"
             ? `Synced ${result.rowsUpserted} rows · ${result.tasksCreated} new task(s)`
             : result.status === "partial"
-              ? `Partial: ${result.pagesFetched}/${result.totalPages} pages`
-              : `Failed: ${result.errorMessage ?? result.errorCode}`}
+              ? `Partial: ${result.pagesFetched}/${result.totalPages} pages synced · detection deferred`
+              : result.status === "skipped"
+                ? "A sync is already in progress for this account."
+                : `Failed: ${result.errorMessage ?? result.errorCode}`}
         </span>
       ) : null}
       {error ? <span className="text-sm text-red-600">{error}</span> : null}
